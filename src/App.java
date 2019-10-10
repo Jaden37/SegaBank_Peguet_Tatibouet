@@ -1,4 +1,5 @@
 import bo.*;
+import dal.CoSimpleDAO;
 import dal.PersistenceManager;
 
 import java.io.IOException;
@@ -9,12 +10,13 @@ import java.sql.Statement;
 
 public class App {
     public static void main(String[] args) {
-        try(Connection connection = PersistenceManager.getConnection())
-        {
-
-        } catch (SQLException | IOException e) {
-            e.printStackTrace();
-        }
+        CoSimple cs = new CoSimple(1, 1000, 1, 500);
+        CoSimpleDAO csdao = new CoSimpleDAO();
+        //csdao.create(cs);
+        //csdao.update(cs);
+        System.out.println(csdao.findAll(cs).toString());
+        System.out.println(csdao.findById(cs.getIdCompte()).toString());
+        csdao.delete(cs.getIdCompte());
     }
 
     public static void testClasses(){

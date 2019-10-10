@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 public class Agence {
     private int idAgence;
-    private int code;
+    private String code;
     private String addresse;
     private ArrayList<Compte> comptes;
 
@@ -14,10 +14,10 @@ public class Agence {
     public void setIdAgence(int idAgence) {
         this.idAgence = idAgence;
     }
-    public int getCode() {
+    public String getCode() {
         return code;
     }
-    public void setCode(int code) {
+    public void setCode(String code) {
         this.code = code;
     }
     public String getAddresse() {
@@ -33,7 +33,7 @@ public class Agence {
         this.comptes = comptes;
     }
 
-    public Agence(int idAgence, int code, String addresse) {
+    public Agence(int idAgence, String code, String addresse) {
         this.idAgence = idAgence;
         this.code = code;
         this.addresse = addresse;

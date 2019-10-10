@@ -37,7 +37,7 @@ public class PersistenceManager {
     public static void closeConnection() throws SQLException {
         if(connection != null){
             connection.close();
-            System.out.println("Connexion Fermée");
+            System.out.println("Disconnected from the database");
         }
     }
 }
