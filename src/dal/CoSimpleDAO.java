@@ -9,7 +9,7 @@ import java.util.ArrayList;
 public class CoSimpleDAO implements ICompteDAO<Integer, CoSimple> {
     private static final String INSERT_CoSimple_QUERY = "INSERT INTO compte (solde, decouvert, type, idAgence) VALUES (?, ?, ?, ?)";
     private static final String UPDATE_CoSimple_QUERY = "UPDATE compte SET solde = ?, decouvert = ?, idAgence = ? WHERE compte.idCompte = ?";
-    private static final String SELECT_ALL_CoSimple_QUERY = "SELECT * FROM compte WHERE type = 'Simple'";
+    private static final String SELECT_ALL_CoSimple_QUERY = "SELECT * FROM compte WHERE type = 'S'";
     private static final String FIND_By_Id_CoSimple_QUERY = "SELECT * FROM compte WHERE idCompte = ?";
     private static final String DELETE_CoSimple_QUERY = "DELETE FROM compte WHERE idCompte = ?";
 
@@ -21,7 +21,7 @@ public class CoSimpleDAO implements ICompteDAO<Integer, CoSimple> {
             //Préparation de la requête
             ps.setDouble(   1, object.getSolde());
             ps.setDouble(2, object.getDecouvert());
-            ps.setString(3, "Simple");
+            ps.setString(3, "S");
             ps.setInt(4, object.getIdAgence());
             //Envoi de la requête
             ps.executeUpdate();

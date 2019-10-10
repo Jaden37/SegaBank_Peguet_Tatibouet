@@ -1,5 +1,6 @@
 import bo.*;
 import dal.CoEpargneDAO;
+import dal.CoPayantDAO;
 import dal.PersistenceManager;
 
 import java.io.IOException;
@@ -10,13 +11,13 @@ import java.sql.Statement;
 
 public class App {
     public static void main(String[] args) {
-        CoEpargne ce = new CoEpargne(12, 1000, 1, 15);
-        CoEpargneDAO cedao = new CoEpargneDAO();
-        cedao.create(ce);
-        //cedao.update(ce);
-        System.out.println(cedao.findAll(ce).toString());
-        System.out.println(cedao.findById(ce.getIdCompte()).toString());
-        //cedao.delete(ce.getIdCompte());
+        CoPayant cp = new CoPayant(18, 3800, 1);
+        CoPayantDAO cpdao = new CoPayantDAO();
+        cpdao.create(cp);
+        //cpdao.update(cp);
+        System.out.println(cpdao.findAll(cp).toString());
+        System.out.println(cpdao.findById(cp.getIdCompte()).toString());
+        //cpdao.delete(cp.getIdCompte());
     }
 
     public static void testClasses(){

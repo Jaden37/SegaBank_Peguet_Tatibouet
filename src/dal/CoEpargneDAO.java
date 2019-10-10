@@ -9,7 +9,7 @@ import java.util.ArrayList;
 public class CoEpargneDAO implements ICompteDAO<Integer, CoEpargne> {
     private static final String INSERT_CoEpargne_QUERY = "INSERT INTO compte (solde, tauxInteret, type, idAgence) VALUES (?, ?, ?, ?)";
     private static final String UPDATE_CoEpargne_QUERY = "UPDATE compte SET solde = ?, tauxInteret = ?, idAgence = ? WHERE compte.idCompte = ?";
-    private static final String SELECT_ALL_CoEpargne_QUERY = "SELECT * FROM compte WHERE type = 'Epargne'";
+    private static final String SELECT_ALL_CoEpargne_QUERY = "SELECT * FROM compte WHERE type = 'E'";
     private static final String FIND_By_Id_CoEpargne_QUERY = "SELECT * FROM compte WHERE idCompte = ?";
     private static final String DELETE_CoEpargne_QUERY = "DELETE FROM compte WHERE idCompte = ?";
 
@@ -22,7 +22,7 @@ public class CoEpargneDAO implements ICompteDAO<Integer, CoEpargne> {
             //Préparation de la requête
             ps.setDouble(   1, object.getSolde());
             ps.setFloat(2, object.getTauxInteret());
-            ps.setString(3, "Epargne");
+            ps.setString(3, "E");
             ps.setInt(4, object.getIdAgence());
             //Envoi de la requête
             ps.executeUpdate();
@@ -72,11 +72,11 @@ public class CoEpargneDAO implements ICompteDAO<Integer, CoEpargne> {
         {
             ps.setInt(1, integer);
             ResultSet rs = ps.executeQuery();
-            CoEpargne cs = null;
+            CoEpargne ce = null;
             while (rs.next()){
-                cs = new CoEpargne(rs.getInt("idCompte"), rs.getDouble("solde"), rs.getInt("idAgence"), rs.getFloat("tauxInteret"));
+                ce = new CoEpargne(rs.getInt("idCompte"), rs.getDouble("solde"), rs.getInt("idAgence"), rs.getFloat("tauxInteret"));
             }
-            return cs;
+            return ce;
         } catch (SQLException | IOException e) {
             e.printStackTrace();
             return null;
