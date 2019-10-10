@@ -1,7 +1,23 @@
 import bo.*;
+import dal.PersistenceManager;
+
+import java.io.IOException;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.sql.Statement;
 
 public class App {
     public static void main(String[] args) {
+        try(Connection connection = PersistenceManager.getConnection())
+        {
+
+        } catch (SQLException | IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void testClasses(){
         CoEpargne ce = new CoEpargne(1, 1000.00, 1, 10);
         System.out.println(ce.toString());
         ce.calculTauxInteret();
