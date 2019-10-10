@@ -1,5 +1,5 @@
 import bo.*;
-import dal.CoSimpleDAO;
+import dal.CoEpargneDAO;
 import dal.PersistenceManager;
 
 import java.io.IOException;
@@ -10,17 +10,17 @@ import java.sql.Statement;
 
 public class App {
     public static void main(String[] args) {
-        CoSimple cs = new CoSimple(1, 1000, 1, 500);
-        CoSimpleDAO csdao = new CoSimpleDAO();
-        //csdao.create(cs);
-        //csdao.update(cs);
-        System.out.println(csdao.findAll(cs).toString());
-        System.out.println(csdao.findById(cs.getIdCompte()).toString());
-        csdao.delete(cs.getIdCompte());
+        CoEpargne ce = new CoEpargne(12, 1000, 1, 15);
+        CoEpargneDAO cedao = new CoEpargneDAO();
+        cedao.create(ce);
+        //cedao.update(ce);
+        System.out.println(cedao.findAll(ce).toString());
+        System.out.println(cedao.findById(ce.getIdCompte()).toString());
+        //cedao.delete(ce.getIdCompte());
     }
 
     public static void testClasses(){
-        CoEpargne ce = new CoEpargne(1, 1000.00, 1, 10);
+        CoEpargne ce = new CoEpargne(13, 1000, 10, 10);
         System.out.println(ce.toString());
         ce.calculTauxInteret();
         System.out.println(ce.toString());
@@ -35,8 +35,8 @@ public class App {
         cp.retrait(10);
         System.out.println(cp.toString());
 
-        CoSimple cs = new CoSimple(3, 1000, 3, 500);
-        cs.retrait(1200);
-        System.out.println(cs.toString());
+        CoEpargne cep = new CoEpargne(14, 3000, 1000, 30);
+        cep.retrait(1200);
+        System.out.println(ce.toString());
     }
 }
