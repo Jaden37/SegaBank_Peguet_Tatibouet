@@ -10,6 +10,9 @@ public class CoSimple extends Compte {
         this.decouvert = decouvert;
     }
 
+    public CoSimple() {
+        super();
+    }
     public CoSimple(int idCompte, double solde, int idAgence, double decouvert) {
         super(idCompte, solde, idAgence);
         this.decouvert = decouvert;

@@ -10,6 +10,10 @@ public class CoEpargne extends Compte {
         this.tauxInteret = tauxInteret;
     }
 
+    public CoEpargne() {
+        super();
+    }
+
     public CoEpargne(int idCompte, double solde, int idAgence, float tauxInteret) {
         super(idCompte, solde, idAgence);
         this.tauxInteret = tauxInteret;

@@ -10,11 +10,9 @@ public class CoSimpleDAO implements ICompteDAO<Integer, CoSimple> {
     private static final String INSERT_CoSimple_QUERY = "INSERT INTO compte (solde, decouvert, type, idAgence) VALUES (?, ?, ?, ?)";
     private static final String UPDATE_CoSimple_QUERY = "UPDATE compte SET solde = ?, decouvert = ?, idAgence = ? WHERE compte.idCompte = ?";
     private static final String SELECT_ALL_CoSimple_QUERY = "SELECT * FROM compte WHERE type = 'S'";
-    private static final String FIND_By_Id_CoSimple_QUERY = "SELECT * FROM compte WHERE idCompte = ?";
-    private static final String DELETE_CoSimple_QUERY = "DELETE FROM compte WHERE idCompte = ?";
 
     @Override
-    public void create(CoSimple object) {
+    public CoSimple create(CoSimple object) {
         try(Connection connection = PersistenceManager.getConnection();
             PreparedStatement ps = connection.prepareStatement(INSERT_CoSimple_QUERY, Statement.RETURN_GENERATED_KEYS))
         {
@@ -24,26 +22,41 @@ public class CoSimpleDAO implements ICompteDAO<Integer, CoSimple> {
             ps.setString(3, "S");
             ps.setInt(4, object.getIdAgence());
             //Envoi de la requête
-            ps.executeUpdate();
+            ResultSet rs = ps.executeQuery();
+            CoSimple New_CoSimple = new CoSimple();
+            while (rs.next()){
+                New_CoSimple = new CoSimple(rs.getInt("idCompte"), rs.getDouble("solde"), rs.getInt("idAgence"), rs.getDouble("decouvert"));
+            }
+            return New_CoSimple;
         } catch (SQLException | IOException e) {
             e.printStackTrace();
+            return null;
         }
     }
 
     @Override
-    public void update(CoSimple object) {
+    public CoSimple update(CoSimple object_old, CoSimple object_new) {
         try(Connection connection = PersistenceManager.getConnection();
             PreparedStatement ps = connection.prepareStatement(UPDATE_CoSimple_QUERY, Statement.RETURN_GENERATED_KEYS))
         {
             //Préparation de la requête
-            ps.setDouble(   1, object.getSolde());
-            ps.setDouble(2, object.getDecouvert());
-            ps.setInt(3, object.getIdAgence());
-            ps.setInt(4, object.getIdCompte());
+            ps.setDouble(   1, object_new.getSolde());
+            ps.setDouble(2, object_new.getDecouvert());
+            ps.setInt(3, object_new.getIdAgence());
+            ps.setInt(4, object_new.getIdCompte());
             //Envoi de la requête
-            ps.executeUpdate();
+            try{
+                ps.executeUpdate();
+                System.out.println("Update compte successfull");
+                return object_new;
+            } catch (SQLException e) {
+                e.printStackTrace();
+                System.out.println("Update compte failed");
+                return object_old;
+            }
         } catch (SQLException | IOException e) {
             e.printStackTrace();
+            return null;
         }
     }
 
@@ -67,7 +80,7 @@ public class CoSimpleDAO implements ICompteDAO<Integer, CoSimple> {
     @Override
     public CoSimple findById(Integer integer) {
         try(Connection connection = PersistenceManager.getConnection();
-            PreparedStatement ps = connection.prepareStatement(FIND_By_Id_CoSimple_QUERY, Statement.RETURN_GENERATED_KEYS))
+            PreparedStatement ps = connection.prepareStatement(FIND_By_Id_QUERY, Statement.RETURN_GENERATED_KEYS))
         {
             ps.setInt(1, integer);
             ResultSet rs = ps.executeQuery();
@@ -85,7 +98,7 @@ public class CoSimpleDAO implements ICompteDAO<Integer, CoSimple> {
     @Override
     public void delete(Integer integer) {
         try(Connection connection = PersistenceManager.getConnection();
-            PreparedStatement ps = connection.prepareStatement(DELETE_CoSimple_QUERY, Statement.RETURN_GENERATED_KEYS))
+            PreparedStatement ps = connection.prepareStatement(DELETE_By_Id_QUERY, Statement.RETURN_GENERATED_KEYS))
         {
             ps.setInt(1, integer);
             ResultSet rs = ps.executeQuery();

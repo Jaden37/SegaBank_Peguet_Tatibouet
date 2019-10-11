@@ -3,6 +3,10 @@ package bo;
 import java.sql.SQLOutput;
 
 public class CoPayant extends Compte {
+    public CoPayant() {
+        super();
+    }
+
     public CoPayant(int idCompte, double solde, int idAgence) {
         super(idCompte, solde, idAgence);
     }

@@ -31,6 +31,9 @@ public abstract class Compte {
         this.agence = agence;
     }
 
+    public Compte() {
+    }
+
     public Compte(int idCompte, double solde, int idAgence) {
         this.idCompte = idCompte;
         this.solde = solde;

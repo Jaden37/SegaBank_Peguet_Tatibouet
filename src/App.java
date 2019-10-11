@@ -11,10 +11,13 @@ import java.sql.Statement;
 
 public class App {
     public static void main(String[] args) {
-        CoPayant cp = new CoPayant(18, 3800, 1);
+        CoPayant cp = new CoPayant(18, 15000, 1);
         CoPayantDAO cpdao = new CoPayantDAO();
-        cpdao.create(cp);
-        //cpdao.update(cp);
+        cp = cpdao.create(cp);
+        CoPayant CoPTempo = cp;
+        CoPTempo.retrait(1500);
+        cp = cpdao.update(cp, CoPTempo);
+        System.out.println(cp.toString());
         System.out.println(cpdao.findAll(cp).toString());
         System.out.println(cpdao.findById(cp.getIdCompte()).toString());
         //cpdao.delete(cp.getIdCompte());
