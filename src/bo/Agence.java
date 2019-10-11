@@ -7,7 +7,7 @@ import java.util.stream.Collectors;
 public class Agence {
     private int idAgence;
     private String code;
-    private String addresse;
+    private String adresse;
     private ArrayList<Compte> comptes;
 
     public int getIdAgence() {
@@ -22,11 +22,11 @@ public class Agence {
     public void setCode(String code) {
         this.code = code;
     }
-    public String getAddresse() {
-        return addresse;
+    public String getAdresse() {
+        return adresse;
     }
-    public void setAddresse(String addresse) {
-        this.addresse = addresse;
+    public void setAdresse(String adresse) {
+        this.adresse = adresse;
     }
     public ArrayList<Compte> getComptes() {
         return comptes;
@@ -35,10 +35,21 @@ public class Agence {
         this.comptes = comptes;
     }
 
-    public Agence(int idAgence, String code, String addresse) {
+    public Agence(int idAgence, String code, String adresse) {
         this.idAgence = idAgence;
         this.code = code;
-        this.addresse = addresse;
+        this.adresse = adresse;
+    }
+
+    @Override
+    public String toString() {
+        final StringBuffer sb = new StringBuffer("Agence{");
+        sb.append("idAgence=").append(idAgence);
+        sb.append(", code='").append(code).append('\'');
+        sb.append(", adresse='").append(adresse).append('\'');
+        sb.append(", comptes=").append(comptes);
+        sb.append('}');
+        return sb.toString();
     }
 
     public void ListerComptes(ArrayList<CoPayant> comptes) throws IOException {
