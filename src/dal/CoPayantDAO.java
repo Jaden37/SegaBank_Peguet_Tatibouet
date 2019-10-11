@@ -4,7 +4,10 @@ import bo.CoPayant;
 import javax.naming.NamingEnumeration;
 import java.io.IOException;
 import java.sql.*;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 
 public class CoPayantDAO implements ICompteDAO<Integer, CoPayant>{
     private static final String INSERT_CoPayant_QUERY = "INSERT INTO compte (solde, type, idAgence) VALUES (?, ?, ?)";
@@ -14,12 +17,14 @@ public class CoPayantDAO implements ICompteDAO<Integer, CoPayant>{
     @Override
     public CoPayant create(CoPayant object) {
         try(Connection connection = PersistenceManager.getConnection();
-            PreparedStatement ps = connection.prepareStatement(INSERT_CoPayant_QUERY, Statement.RETURN_GENERATED_KEYS))
+            PreparedStatement ps = connection.prepareStatement(INSERT_CoPayant_QUERY, Statement.RETURN_GENERATED_KEYS);
+            PreparedStatement ps2 = connection.prepareStatement(INSERT_OPERATION))
         {
             //Préparation de la requête
-            ps.setDouble(   1, object.getSolde());
+            ps.setDouble(1, object.getSolde());
             ps.setString(2, "P");
             ps.setInt(3, object.getIdAgence());
+
             //Envoi de la requête
             int affectedRows = ps.executeUpdate();
 
@@ -30,6 +35,12 @@ public class CoPayantDAO implements ICompteDAO<Integer, CoPayant>{
             try (ResultSet generatedKeys = ps.getGeneratedKeys()) {
                 if (generatedKeys.next()) {
                     object.setIdCompte(generatedKeys.getInt(1));
+                    ps2.setString(1, "Creation du compte payant");
+                    ps2.setDouble(2, object.getSolde());
+                    java.util.Date date = new Date();
+                    ps2.setTimestamp(3, new java.sql.Timestamp(date.getTime()));
+                    ps2.setInt(4, object.getIdCompte());
+                    ps2.executeUpdate();
                     return object;
                 }
                 else {
@@ -45,7 +56,8 @@ public class CoPayantDAO implements ICompteDAO<Integer, CoPayant>{
     @Override
     public CoPayant update(CoPayant object_old, CoPayant object_new) {
         try(Connection connection = PersistenceManager.getConnection();
-            PreparedStatement ps = connection.prepareStatement(UPDATE_CoPayant_QUERY, Statement.RETURN_GENERATED_KEYS))
+            PreparedStatement ps = connection.prepareStatement(UPDATE_CoPayant_QUERY);
+            PreparedStatement ps2 = connection.prepareStatement(INSERT_OPERATION))
         {
             //Préparation de la requête
             ps.setDouble(   1, object_new.getSolde());
@@ -53,7 +65,19 @@ public class CoPayantDAO implements ICompteDAO<Integer, CoPayant>{
             ps.setInt(3, object_new.getIdCompte());
             //Envoi de la requête
             try{
+                System.out.println(object_new.getSolde() - object_new.getSolde());
                 ps.executeUpdate();
+                if (object_old.getSolde() > object_new.getSolde()){
+                    ps2.setString(1, "Retrait du compte payant");
+                    ps2.setDouble(2, object_new.getSolde() - object_old.getSolde());
+                }else {
+                    ps2.setString(1, "Versement du compte payant");
+                    ps2.setDouble(2,  object_new.getSolde() - object_old.getSolde());
+                }
+                java.util.Date date = new Date();
+                ps2.setTimestamp(3, new java.sql.Timestamp(date.getTime()));
+                ps2.setInt(4, object_new.getIdCompte());
+                ps2.executeUpdate();
                 System.out.println("Update compte successfull");
                 return object_new;
             } catch (SQLException e) {
@@ -87,7 +111,7 @@ public class CoPayantDAO implements ICompteDAO<Integer, CoPayant>{
     @Override
     public CoPayant findById(Integer integer) {
         try(Connection connection = PersistenceManager.getConnection();
-            PreparedStatement ps = connection.prepareStatement(FIND_By_Id_QUERY, Statement.RETURN_GENERATED_KEYS))
+            PreparedStatement ps = connection.prepareStatement(FIND_By_Id_QUERY))
         {
             ps.setInt(1, integer);
             ResultSet rs = ps.executeQuery();
@@ -105,7 +129,7 @@ public class CoPayantDAO implements ICompteDAO<Integer, CoPayant>{
     @Override
     public void delete(Integer integer) {
         try(Connection connection = PersistenceManager.getConnection();
-            PreparedStatement ps = connection.prepareStatement(DELETE_By_Id_QUERY, Statement.RETURN_GENERATED_KEYS))
+            PreparedStatement ps = connection.prepareStatement(DELETE_By_Id_QUERY))
         {
             ps.setInt(1, integer);
             ResultSet rs = ps.executeQuery();

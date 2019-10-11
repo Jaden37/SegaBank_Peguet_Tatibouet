@@ -5,6 +5,7 @@ import bo.CoEpargne;
 import java.io.IOException;
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Date;
 
 public class CoEpargneDAO implements ICompteDAO<Integer, CoEpargne> {
     private static final String INSERT_CoEpargne_QUERY = "INSERT INTO compte (solde, tauxInteret, type, idAgence) VALUES (?, ?, ?, ?)";
@@ -14,7 +15,8 @@ public class CoEpargneDAO implements ICompteDAO<Integer, CoEpargne> {
     @Override
     public CoEpargne create(CoEpargne object) {
         try(Connection connection = PersistenceManager.getConnection();
-            PreparedStatement ps = connection.prepareStatement(INSERT_CoEpargne_QUERY, Statement.RETURN_GENERATED_KEYS))
+            PreparedStatement ps = connection.prepareStatement(INSERT_CoEpargne_QUERY, Statement.RETURN_GENERATED_KEYS);
+            PreparedStatement ps2 = connection.prepareStatement(INSERT_OPERATION))
         {
             //Préparation de la requête
             ps.setDouble(   1, object.getSolde());
@@ -22,12 +24,27 @@ public class CoEpargneDAO implements ICompteDAO<Integer, CoEpargne> {
             ps.setString(3, "E");
             ps.setInt(4, object.getIdAgence());
             //Envoi de la requête
-            ResultSet rs = ps.executeQuery();
-            CoEpargne New_CoEpargne = new CoEpargne();
-            while (rs.next()){
-                New_CoEpargne = new CoEpargne(rs.getInt("idCompte"), rs.getDouble("solde"), rs.getInt("idAgence"),  rs.getFloat("tauxInteret"));
+            int affectedRows = ps.executeUpdate();
+
+            if (affectedRows == 0) {
+                throw new SQLException("Creating compte failed, no rows affected.");
             }
-            return New_CoEpargne;
+
+            try (ResultSet generatedKeys = ps.getGeneratedKeys()) {
+                if (generatedKeys.next()) {
+                    object.setIdCompte(generatedKeys.getInt(1));
+                    ps2.setString(1, "Creation du compte epargne");
+                    ps2.setDouble(2, object.getSolde());
+                    java.util.Date date = new Date();
+                    ps2.setTimestamp(3, new java.sql.Timestamp(date.getTime()));
+                    ps2.setInt(4, object.getIdCompte());
+                    ps2.executeUpdate();
+                    return object;
+                }
+                else {
+                    throw new SQLException("Creating compte failed, no ID obtained.");
+                }
+            }
         } catch (SQLException | IOException e) {
             e.printStackTrace();
             return null;
@@ -37,7 +54,8 @@ public class CoEpargneDAO implements ICompteDAO<Integer, CoEpargne> {
     @Override
     public CoEpargne update(CoEpargne object_old, CoEpargne object_new) {
         try(Connection connection = PersistenceManager.getConnection();
-            PreparedStatement ps = connection.prepareStatement(UPDATE_CoEpargne_QUERY, Statement.RETURN_GENERATED_KEYS))
+            PreparedStatement ps = connection.prepareStatement(UPDATE_CoEpargne_QUERY);
+            PreparedStatement ps2 = connection.prepareStatement(INSERT_OPERATION))
         {
             //Préparation de la requête
             ps.setDouble(   1, object_new.getSolde());
@@ -46,7 +64,19 @@ public class CoEpargneDAO implements ICompteDAO<Integer, CoEpargne> {
             ps.setInt(4, object_new.getIdCompte());
             //Envoi de la requête
             try{
+                System.out.println(object_new.getSolde() - object_new.getSolde());
                 ps.executeUpdate();
+                if (object_old.getSolde() > object_new.getSolde()){
+                    ps2.setString(1, "Retrait du compte epargne");
+                    ps2.setDouble(2, object_new.getSolde() - object_old.getSolde());
+                }else {
+                    ps2.setString(1, "Versement du compte epargne");
+                    ps2.setDouble(2,  object_new.getSolde() - object_old.getSolde());
+                }
+                java.util.Date date = new Date();
+                ps2.setTimestamp(3, new java.sql.Timestamp(date.getTime()));
+                ps2.setInt(4, object_new.getIdCompte());
+                ps2.executeUpdate();
                 System.out.println("Update compte successfull");
                 return object_new;
             } catch (SQLException e) {
@@ -80,7 +110,7 @@ public class CoEpargneDAO implements ICompteDAO<Integer, CoEpargne> {
     @Override
     public CoEpargne findById(Integer integer) {
         try(Connection connection = PersistenceManager.getConnection();
-            PreparedStatement ps = connection.prepareStatement(FIND_By_Id_QUERY, Statement.RETURN_GENERATED_KEYS))
+            PreparedStatement ps = connection.prepareStatement(FIND_By_Id_QUERY))
         {
             ps.setInt(1, integer);
             ResultSet rs = ps.executeQuery();
@@ -98,7 +128,7 @@ public class CoEpargneDAO implements ICompteDAO<Integer, CoEpargne> {
     @Override
     public void delete(Integer integer) {
         try(Connection connection = PersistenceManager.getConnection();
-            PreparedStatement ps = connection.prepareStatement(DELETE_By_Id_QUERY, Statement.RETURN_GENERATED_KEYS))
+            PreparedStatement ps = connection.prepareStatement(DELETE_By_Id_QUERY))
         {
             ps.setInt(1, integer);
             ResultSet rs = ps.executeQuery();

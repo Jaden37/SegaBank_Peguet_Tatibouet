@@ -10,17 +10,20 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 public class App {
-    public static void main(String[] args) {
-        CoPayant cp = new CoPayant(18, 15000, 1);
+    public static void main(String[] args) throws IOException {
+        CoPayant cp = new CoPayant(2, 8000, 1);
         CoPayantDAO cpdao = new CoPayantDAO();
-        cp = cpdao.create(cp);
-        CoPayant CoPTempo = cp;
-        CoPTempo.retrait(1500);
-        cp = cpdao.update(cp, CoPTempo);
-        System.out.println(cp.toString());
-        System.out.println(cpdao.findAll(cp).toString());
-        System.out.println(cpdao.findById(cp.getIdCompte()).toString());
+        //cp = cpdao.create(cp);
+        CoPayant CoPTempo = new CoPayant(cp.getIdCompte(), cp.getSolde(), cp.getIdAgence());
+        CoPTempo.versement(1500);
+        //cp = cpdao.update(cp, CoPTempo);
+
+        //System.out.println(cp.toString());
+        //System.out.println(cpdao.findAll(cp).toString());
+        System.out.println(cpdao.findById(28).toString());
         //cpdao.delete(cp.getIdCompte());
+        Agence agence = new Agence(1, "Nantes", "2 rue des madelaines");
+        agence.ListerComptes(cpdao.findAll(cp));
     }
 
     public static void testClasses(){
