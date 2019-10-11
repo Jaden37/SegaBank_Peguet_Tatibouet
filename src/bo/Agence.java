@@ -56,16 +56,18 @@ public class Agence {
         try
         {
             BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream("./resources/comptes.csv"), "UTF-8"));
+            String CSV_SEPARATOR = ";";
+
+            bw.write("idCompte; solde; idAgence");
+            bw.newLine();
             for (Compte compte : comptes)
             {
-                String CSV_SEPARATOR = ",";
                 StringBuffer oneLine = new StringBuffer();
                 oneLine.append(compte.getIdCompte());
                 oneLine.append(CSV_SEPARATOR);
                 oneLine.append(compte.getSolde());
                 oneLine.append(CSV_SEPARATOR);
                 oneLine.append(compte.getIdAgence());
-                oneLine.append(";");
                 bw.write(oneLine.toString());
                 bw.newLine();
             }
