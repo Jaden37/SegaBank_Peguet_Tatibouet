@@ -35,6 +35,9 @@ public class Agence {
         this.comptes = comptes;
     }
 
+    public Agence() {
+    }
+
     public Agence(int idAgence, String code, String adresse) {
         this.idAgence = idAgence;
         this.code = code;

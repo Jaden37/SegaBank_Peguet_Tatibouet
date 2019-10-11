@@ -10,8 +10,80 @@ import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class App {
+    private AgenceDAO adao = new AgenceDAO();
+    private CoSimpleDAO csdao = new CoSimpleDAO();
+    private CoEpargneDAO cedao = new CoEpargneDAO();
+    private CoPayantDAO cpdao = new CoPayantDAO();
+    private Agence agence_en_cours = new Agence();
 
     public static void main(String[] args) {
+        Scanner sc = new Scanner( System.in );
+        int codeResponse = 0;
+        boolean first = true;
+        do {
+            if (!first) {
+                System.out.println("Menu introuvable, veuillez retaper un code valide");
+            }
+            Menu.getMenu();
+            try {
+                codeResponse = sc.nextInt();
+            } catch (InputMismatchException e) {
+                codeResponse = -1;
+            } finally {
+                sc.nextLine();
+            }
+            first = false;
+
+        } while (codeResponse < 1 || codeResponse > 15);
+
+        switch ( codeResponse ) {
+            case 1:
+                System.out.println("Choix 1");
+                choix1();
+                break;
+            case 2:
+                System.out.println("Choix 2");
+                break;
+            case 3:
+                System.out.println("Choix 3");
+                break;
+            case 4:
+                System.out.println("Choix 4");
+                break;
+            case 5:
+                System.out.println("Choix 5");
+                break;
+            case 6:
+                System.out.println("Choix 6");
+                break;
+            case 7:
+                System.out.println("Choix 7");
+                break;
+            case 8:
+                System.out.println("Choix 8");
+                break;
+            case 9:
+                System.out.println("Choix 9");
+                break;
+            case 10:
+                System.out.println("Choix 10");
+                break;
+            case 11:
+                System.out.println("Choix 11");
+                break;
+            case 12:
+                System.out.println("Choix 12");
+                break;
+            case 13:
+                System.out.println("Choix 13");
+                break;
+            case 14:
+                System.out.println("Choix 14");
+                break;
+            case 15:
+                System.out.println("Choix 15");
+                break;
+        }
     }
 
     public static void testBDD() throws IOException {
@@ -60,6 +132,20 @@ public class App {
         CoEpargne cep = new CoEpargne(14, 3000, 1000, 30);
         cep.retrait(1200);
         System.out.println(ce.toString());
+    }
+
+    public static void choix1(){
+        //oublie pas de rajouter des sout pour le bien de l'utilisateur :-)
+
+        //rentrer le nom de l'agence, le code l'adresse
+
+        //Agence newAgence = new Agence(les infos saisis par l'utilisateur)
+
+            //l'agence en cours permettra de mettre l'id agence dans la futur création des comptes
+            //faire donc un test lors de la création d'un compte que agence en cours soit bien défini
+            //permettre à l'utilisateur via une fonction de changer l'agence en cours
+
+        //agence_en_cours = adao.create(newAgence);
     }
 
 }
