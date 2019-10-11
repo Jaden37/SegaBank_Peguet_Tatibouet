@@ -11,7 +11,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 public class App {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         Agence ag = new Agence(2,  "A380", "15 rue du crack boursier");
         Agence ag2 = new Agence(2,  "EP56", "18 route de la fortune");
         AgenceDAO adao = new AgenceDAO();
