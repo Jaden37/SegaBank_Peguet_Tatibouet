@@ -1,4 +1,5 @@
 import bo.*;
+import dal.AgenceDAO;
 import dal.CoEpargneDAO;
 import dal.CoPayantDAO;
 import dal.PersistenceManager;
@@ -11,16 +12,15 @@ import java.sql.Statement;
 
 public class App {
     public static void main(String[] args) {
-        CoPayant cp = new CoPayant(18, 15000, 1);
-        CoPayantDAO cpdao = new CoPayantDAO();
-        cp = cpdao.create(cp);
-        CoPayant CoPTempo = cp;
-        CoPTempo.retrait(1500);
-        cp = cpdao.update(cp, CoPTempo);
-        System.out.println(cp.toString());
-        System.out.println(cpdao.findAll(cp).toString());
-        System.out.println(cpdao.findById(cp.getIdCompte()).toString());
-        //cpdao.delete(cp.getIdCompte());
+        Agence ag = new Agence(2,  "A380", "15 rue du crack boursier");
+        Agence ag2 = new Agence(2,  "EP56", "18 route de la fortune");
+        AgenceDAO adao = new AgenceDAO();
+        ag = adao.create(ag);
+        ag = adao.update(ag, ag2);
+        System.out.println(ag.toString());
+        System.out.println(adao.findAll(ag).toString());
+        System.out.println(adao.findById(ag.getIdAgence()).toString());
+        //adao.delete(cp.getIdCompte());
     }
 
     public static void testClasses(){
