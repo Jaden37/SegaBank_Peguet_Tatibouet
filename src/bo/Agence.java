@@ -1,6 +1,8 @@
 package bo;
 
+import java.io.*;
 import java.util.ArrayList;
+import java.util.stream.Collectors;
 
 public class Agence {
     private int idAgence;
@@ -49,4 +51,31 @@ public class Agence {
         sb.append('}');
         return sb.toString();
     }
+
+    public void ListerComptes(ArrayList<CoPayant> comptes) throws IOException {
+        try
+        {
+            BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream("./resources/comptes.csv"), "UTF-8"));
+            for (Compte compte : comptes)
+            {
+                String CSV_SEPARATOR = ",";
+                StringBuffer oneLine = new StringBuffer();
+                oneLine.append(compte.getIdCompte());
+                oneLine.append(CSV_SEPARATOR);
+                oneLine.append(compte.getSolde());
+                oneLine.append(CSV_SEPARATOR);
+                oneLine.append(compte.getIdAgence());
+                oneLine.append(";");
+                bw.write(oneLine.toString());
+                bw.newLine();
+            }
+            bw.flush();
+            bw.close();
+        }
+        catch (UnsupportedEncodingException e) {}
+        catch (FileNotFoundException e){}
+        catch (IOException e){}
+
+    }
+
 }

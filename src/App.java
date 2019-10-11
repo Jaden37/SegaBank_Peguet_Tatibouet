@@ -58,6 +58,34 @@ public class App {
             first = false;
 
         } while (codeResponse < 1 || codeResponse > 15);
+
+
+    }
+
+    public static void testBDD() throws IOException {
+        Agence ag = new Agence(2,  "A380", "15 rue du crack boursier");
+        Agence ag2 = new Agence(2,  "EP56", "18 route de la fortune");
+        AgenceDAO adao = new AgenceDAO();
+        ag = adao.create(ag);
+        ag = adao.update(ag, ag2);
+        System.out.println(ag.toString());
+        System.out.println(adao.findAll(ag).toString());
+        System.out.println(adao.findById(ag.getIdAgence()).toString());
+        //adao.delete(cp.getIdCompte());
+
+        CoPayant cp = new CoPayant(2, 8000, 1);
+        CoPayantDAO cpdao = new CoPayantDAO();
+        //cp = cpdao.create(cp);
+        CoPayant CoPTempo = new CoPayant(cp.getIdCompte(), cp.getSolde(), cp.getIdAgence());
+        CoPTempo.versement(1500);
+        //cp = cpdao.update(cp, CoPTempo);
+
+        //System.out.println(cp.toString());
+        //System.out.println(cpdao.findAll(cp).toString());
+        System.out.println(cpdao.findById(28).toString());
+        //cpdao.delete(cp.getIdCompte());
+        Agence agence = new Agence(1, "Nantes", "2 rue des madelaines");
+        agence.ListerComptes(cpdao.findAll(cp));
     }
 
     public static void testClasses(){
@@ -80,4 +108,5 @@ public class App {
         cep.retrait(1200);
         System.out.println(ce.toString());
     }
+
 }
