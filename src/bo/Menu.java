@@ -1,10 +1,5 @@
 package bo;
 
-import dal.IAgenceDAO;
-
-import java.util.InputMismatchException;
-import java.util.Scanner;
-
 public class Menu  {
     public Menu() {}
 

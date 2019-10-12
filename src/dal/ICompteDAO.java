@@ -9,7 +9,7 @@ public interface ICompteDAO<ID, T> {
 
     public T create(T object);
     public T update(T object_old, T object_new);
-    public ArrayList<T> findAll(T object);
+    public ArrayList<T> findAll();
     public T findById(ID id);
     public void delete(ID id);
 }

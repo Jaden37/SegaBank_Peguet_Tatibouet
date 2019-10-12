@@ -42,4 +42,14 @@ public class CoSimple extends Compte {
         }
     }
 
+    @Override
+    public String toString() {
+        final StringBuffer sb = new StringBuffer("CoSimple{");
+        sb.append("idCompte=").append(idCompte);
+        sb.append(", solde=").append(solde);
+        sb.append(", decouvert=").append(decouvert);
+        sb.append(", idAgence=").append(idAgence);
+        sb.append('}');
+        return sb.toString();
+    }
 }

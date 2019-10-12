@@ -48,4 +48,14 @@ public class CoEpargne extends Compte {
         solde += (solde * this.tauxInteret / 100);
     }
 
+    @Override
+    public String toString() {
+        final StringBuffer sb = new StringBuffer("CoEpargne{");
+        sb.append("idCompte=").append(idCompte);
+        sb.append(", solde=").append(solde);
+        sb.append(", tauxInteret=").append(tauxInteret);
+        sb.append(", idAgence=").append(idAgence);
+        sb.append('}');
+        return sb.toString();
+    }
 }

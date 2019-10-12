@@ -16,15 +16,16 @@ public class AgenceDAO implements IAgenceDAO<Integer, Agence> {
 
             int affectedRows = ps.executeUpdate();
             if (affectedRows == 0) {
-                throw new SQLException("Creating agence failed, no rows affected.");
+                throw new SQLException("Creating agency failed, no rows affected.");
             }
             try (ResultSet generatedKeys = ps.getGeneratedKeys()) {
                 if (generatedKeys.next()) {
                     object.setIdAgence(generatedKeys.getInt(1));
+                    System.out.println("Creation agency successful");
                     return object;
                 }
                 else {
-                    throw new SQLException("Creating agence failed, no ID obtained.");
+                    throw new SQLException("Creating agency failed, no ID obtained.");
                 }
             }
 
@@ -44,11 +45,11 @@ public class AgenceDAO implements IAgenceDAO<Integer, Agence> {
             ps.setInt(3, object_new.getIdAgence());
             try{
                 ps.executeUpdate();
-                System.out.println("Update agence successfull");
+                System.out.println("Update agency successful");
                 return object_new;
             } catch (SQLException e) {
                 e.printStackTrace();
-                System.out.println("Update agence failed");
+                System.out.println("Update agency failed");
                 return object_old;
             }
         } catch (SQLException | IOException e) {
@@ -58,7 +59,7 @@ public class AgenceDAO implements IAgenceDAO<Integer, Agence> {
     }
 
     @Override
-    public ArrayList<Agence> findAll(Agence object) {
+    public ArrayList<Agence> findAll() {
         try(Connection connection = PersistenceManager.getConnection();
             Statement st = connection.createStatement();
             ResultSet rs = st.executeQuery(SELECT_ALL_AGENCE_QUERY))
@@ -99,6 +100,7 @@ public class AgenceDAO implements IAgenceDAO<Integer, Agence> {
         {
             ps.setInt(1, integer);
             ResultSet rs = ps.executeQuery();
+            System.out.println("Delete agency successful");
         } catch (SQLException | IOException e) {
             e.printStackTrace();
         }

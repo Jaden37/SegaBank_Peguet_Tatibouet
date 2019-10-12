@@ -77,7 +77,7 @@ public class CoSimpleDAO implements ICompteDAO<Integer, CoSimple> {
                 ps2.setTimestamp(3, new java.sql.Timestamp(date.getTime()));
                 ps2.setInt(4, object_new.getIdCompte());
                 ps2.executeUpdate();
-                System.out.println("Update compte successfull");
+                System.out.println("Update compte successful");
                 return object_new;
             } catch (SQLException e) {
                 e.printStackTrace();
@@ -91,7 +91,7 @@ public class CoSimpleDAO implements ICompteDAO<Integer, CoSimple> {
     }
 
     @Override
-    public ArrayList<CoSimple> findAll(CoSimple object) {
+    public ArrayList<CoSimple> findAll() {
         try(Connection connection = PersistenceManager.getConnection();
             Statement st = connection.createStatement();
             ResultSet rs = st.executeQuery(SELECT_ALL_CoSimple_QUERY))
