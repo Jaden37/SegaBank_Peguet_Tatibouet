@@ -12,7 +12,6 @@ import java.util.Date;
 public class CoPayantDAO implements ICompteDAO<Integer, CoPayant>{
     private static final String INSERT_CoPayant_QUERY = "INSERT INTO compte (solde, type, idAgence) VALUES (?, ?, ?)";
     private static final String UPDATE_CoPayant_QUERY = "UPDATE compte SET solde = ?, idAgence = ? WHERE compte.idCompte = ?";
-    private static final String SELECT_ALL_CoPayant_QUERY = "SELECT * FROM compte WHERE type = 'P'";
 
     @Override
     public CoPayant create(CoPayant object) {
@@ -94,9 +93,10 @@ public class CoPayantDAO implements ICompteDAO<Integer, CoPayant>{
     @Override
     public ArrayList<CoPayant> findAll() {
         try(Connection connection = PersistenceManager.getConnection();
-            Statement st = connection.createStatement();
-            ResultSet rs = st.executeQuery(SELECT_ALL_CoPayant_QUERY))
+            PreparedStatement ps = connection.prepareStatement(SELECT_ALL_QUERY))
         {
+            ps.setString(1, "P");
+            ResultSet rs = ps.executeQuery();
             ArrayList<CoPayant> ComptePayant = new ArrayList<>();
             while (rs.next()){
                 ComptePayant.add(new CoPayant(rs.getInt("idCompte"), rs.getDouble("solde"), rs.getInt("idAgence")));
@@ -129,10 +129,15 @@ public class CoPayantDAO implements ICompteDAO<Integer, CoPayant>{
     @Override
     public void delete(Integer integer) {
         try(Connection connection = PersistenceManager.getConnection();
-            PreparedStatement ps = connection.prepareStatement(DELETE_By_Id_QUERY))
+            PreparedStatement ps = connection.prepareStatement(DELETE_By_Id_QUERY);
+            PreparedStatement ps2 = connection.prepareStatement(DELETE_ALL_OPERATION_QUERY))
         {
             ps.setInt(1, integer);
-            ResultSet rs = ps.executeQuery();
+            ps2.setInt(1, integer);
+
+            //Ont supprime toutes les opérations avant de supprimer le compte
+            ps2.executeQuery();
+            ps.executeQuery();
         } catch (SQLException | IOException e) {
             e.printStackTrace();
         }

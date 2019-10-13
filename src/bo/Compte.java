@@ -40,8 +40,8 @@ public abstract class Compte {
         this.idAgence = idAgence;
     }
 
-    abstract void versement(double montant);
-    abstract void retrait(double montant);
+    abstract boolean versement(double montant);
+    abstract boolean retrait(double montant);
 
     @Override
     public String toString() {

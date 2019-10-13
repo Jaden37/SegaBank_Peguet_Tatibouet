@@ -10,7 +10,6 @@ import java.util.Date;
 public class CoSimpleDAO implements ICompteDAO<Integer, CoSimple> {
     private static final String INSERT_CoSimple_QUERY = "INSERT INTO compte (solde, decouvert, type, idAgence) VALUES (?, ?, ?, ?)";
     private static final String UPDATE_CoSimple_QUERY = "UPDATE compte SET solde = ?, decouvert = ?, idAgence = ? WHERE compte.idCompte = ?";
-    private static final String SELECT_ALL_CoSimple_QUERY = "SELECT * FROM compte WHERE type = 'S'";
 
     @Override
     public CoSimple create(CoSimple object) {
@@ -93,9 +92,10 @@ public class CoSimpleDAO implements ICompteDAO<Integer, CoSimple> {
     @Override
     public ArrayList<CoSimple> findAll() {
         try(Connection connection = PersistenceManager.getConnection();
-            Statement st = connection.createStatement();
-            ResultSet rs = st.executeQuery(SELECT_ALL_CoSimple_QUERY))
+            PreparedStatement ps = connection.prepareStatement(SELECT_ALL_QUERY))
         {
+            ps.setString(1, "S");
+            ResultSet rs = ps.executeQuery();
             ArrayList<CoSimple> ComptesSimple = new ArrayList<>();
             while (rs.next()){
                 ComptesSimple.add(new CoSimple(rs.getInt("idCompte"), rs.getDouble("solde"), rs.getInt("idAgence"), rs.getDouble("decouvert")));
@@ -110,7 +110,7 @@ public class CoSimpleDAO implements ICompteDAO<Integer, CoSimple> {
     @Override
     public CoSimple findById(Integer integer) {
         try(Connection connection = PersistenceManager.getConnection();
-            PreparedStatement ps = connection.prepareStatement(FIND_By_Id_QUERY, Statement.RETURN_GENERATED_KEYS))
+            PreparedStatement ps = connection.prepareStatement(FIND_By_Id_QUERY))
         {
             ps.setInt(1, integer);
             ResultSet rs = ps.executeQuery();
@@ -128,10 +128,15 @@ public class CoSimpleDAO implements ICompteDAO<Integer, CoSimple> {
     @Override
     public void delete(Integer integer) {
         try(Connection connection = PersistenceManager.getConnection();
-            PreparedStatement ps = connection.prepareStatement(DELETE_By_Id_QUERY, Statement.RETURN_GENERATED_KEYS))
+            PreparedStatement ps = connection.prepareStatement(DELETE_By_Id_QUERY);
+            PreparedStatement ps2 = connection.prepareStatement(DELETE_ALL_OPERATION_QUERY))
         {
             ps.setInt(1, integer);
-            ResultSet rs = ps.executeQuery();
+            ps2.setInt(1, integer);
+
+            //Ont supprime toutes les opérations avant de supprimer le compte
+            ps2.executeQuery();
+            ps.executeQuery();
         } catch (SQLException | IOException e) {
             e.printStackTrace();
         }

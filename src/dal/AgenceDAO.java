@@ -39,7 +39,7 @@ public class AgenceDAO implements IAgenceDAO<Integer, Agence> {
     @Override
     public Agence update(Agence object_old, Agence object_new) {
         try(Connection connection = PersistenceManager.getConnection();
-            PreparedStatement ps = connection.prepareStatement(UPDATE_AGENCE_QUERY, Statement.RETURN_GENERATED_KEYS)){
+            PreparedStatement ps = connection.prepareStatement(UPDATE_AGENCE_QUERY)){
             ps.setString(1, object_new.getCode());
             ps.setString(2, object_new.getAdresse());
             ps.setInt(3, object_new.getIdAgence());
@@ -78,7 +78,7 @@ public class AgenceDAO implements IAgenceDAO<Integer, Agence> {
     @Override
     public Agence findById(Integer integer) {
         try(Connection connection = PersistenceManager.getConnection();
-            PreparedStatement ps = connection.prepareStatement(FIND_By_Id_QUERY, Statement.RETURN_GENERATED_KEYS))
+            PreparedStatement ps = connection.prepareStatement(FIND_By_Id_QUERY))
         {
             ps.setInt(1, integer);
             ResultSet rs = ps.executeQuery();
@@ -96,7 +96,7 @@ public class AgenceDAO implements IAgenceDAO<Integer, Agence> {
     @Override
     public void delete(Integer integer) {
         try(Connection connection = PersistenceManager.getConnection();
-            PreparedStatement ps = connection.prepareStatement(DELETE_By_Id_QUERY, Statement.RETURN_GENERATED_KEYS))
+            PreparedStatement ps = connection.prepareStatement(DELETE_By_Id_QUERY))
         {
             ps.setInt(1, integer);
             ResultSet rs = ps.executeQuery();

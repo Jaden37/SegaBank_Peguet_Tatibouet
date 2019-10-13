@@ -13,29 +13,34 @@ public class CoPayant extends Compte {
 
     // Permet de créditer un compte payant
     @Override
-    public void versement(double montant) {
+    public boolean versement(double montant) {
         if(montant > 0){
             double commission = (montant * 5 /100);
             solde += (montant - commission);
             System.out.println("Versement effectué");
+            return true;
         } else {
             System.out.println("Versement impossible. Entrer un montant positif");
+            return false;
         }
     }
 
     // Permet de débiter un compte payant
     @Override
-    public void retrait(double montant) {
+    public boolean retrait(double montant) {
         if(montant > 0 ){
             double commission = (montant * 5 /100);
             if((solde - (montant + commission)) > 0){
                 solde -= (montant + commission);
                 System.out.println("Retrait effectué");
+                return true;
             } else {
                 System.out.println("Solde insuffisant pour ce retrait");
+                return false;
             }
         } else {
             System.out.println("Versement impossible. Entrer un montant positif");
+            return false;
         }
     }
 

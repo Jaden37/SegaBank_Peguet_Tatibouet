@@ -48,42 +48,46 @@ public class App {
                 getAccount();
                 break;
             case 6:
+                System.out.println("Exporter les opérations d'un compte");
+                exportAccountOperations();
+                break;
+            case 7:
                 System.out.println("Création d'un compte simple");
                 CreateSimpleAccount();
                 break;
-            case 7:
-                System.out.println("Opréations sur un compte simple");
+            case 8:
+                System.out.println("Opérations sur un compte simple");
                 TransactionSimpleAccount();
                 break;
-            case 8:
+            case 9:
                 System.out.println("Supprimer un compte simple");
                 DeleteSimpleAccount();
                 break;
-            case 9:
-                System.out.println("Opréations sur un compte épargne");
+            case 10:
+                System.out.println("Créer un compte épargne");
                 CreateSavingAccount();
                 break;
-            case 10:
-                System.out.println("Choix 10");
+            case 11:
+                System.out.println("Opérations sur un compte épargne");
                 TransactionSavingAccount();
                 break;
-            case 11:
+            case 12:
                 System.out.println("Supprimer un compte épargne");
                 DeleteSavingAccount();
                 break;
-            case 12:
+            case 13:
                 System.out.println("Création d'un compte payant");
                 CreatePayingAccount();
                 break;
-            case 13:
+            case 14:
                 System.out.println("Opréations sur un compte payant");
                 TransactionPayingAccount();
                 break;
-            case 14:
+            case 15:
                 System.out.println("Supprimer un compte payant");
                 DeletePayingAccount();
                 break;
-            case 15:
+            case 16:
                 System.out.println("Quitter le menu");
                 break;
         }
@@ -119,7 +123,7 @@ public class App {
     public static void testClasses(){
         CoEpargne ce = new CoEpargne(13, 1000, 10, 10);
         System.out.println(ce.toString());
-        ce.calculTauxInteret();
+        //ce.calculTauxInteret();
         System.out.println(ce.toString());
         ce.versement(100.30);
         ce.versement(-330);
@@ -140,13 +144,13 @@ public class App {
     // Fonctions Menu
     public static String userEntryCodeAgence(String codeAgency){
         Scanner sc = new Scanner( System.in );
-        System.out.println("Saisir le nom de l'agence : ");
+        System.out.println("Saisir le code de l'agence : ");
         codeAgency = sc.nextLine();
         return codeAgency;
     }
     public static String userEntryAdAgence(String adAgence){
         Scanner sc = new Scanner( System.in );
-        System.out.println("Saisir le nom de l'agence : ");
+        System.out.println("Saisir l'adresse de l'agence : ");
         adAgence = sc.nextLine();
         return adAgence;
     }
@@ -180,10 +184,12 @@ public class App {
                 String adAgence2 = "";
                 codeAgency2 = userEntryCodeAgence(codeAgency2);
                 adAgence2 = userEntryAdAgence(adAgence2);
+                newAgency.setCode(codeAgency2);
+                newAgency.setAdresse(adAgence2);
 
                 // Modification
                 Agence currentAgency = new Agence(1, codeAgency2, adAgence2);
-                currentAgency = adao.update(newAgency, currentAgency);
+                currentAgency = adao.update(currentAgency, newAgency);
                 System.out.println(currentAgency.toString());
                 break;
             case 2:
@@ -205,16 +211,20 @@ public class App {
 
         // Recherche de l'agence à modifier
         Agence currentAgency = adao.findById(IdChoice);
+        if (currentAgency != null){
+            // Modification
+            String codeAgency = "";
+            String adAgence = "";
+            codeAgency = userEntryCodeAgence(codeAgency);
+            adAgence = userEntryAdAgence(adAgence);
 
-        // Modification
-        String codeAgency = "";
-        String adAgence = "";
-        codeAgency = userEntryCodeAgence(codeAgency);
-        adAgence = userEntryAdAgence(adAgence);
+            Agence newAgency = new Agence(currentAgency.getIdAgence(), codeAgency, adAgence);
+            newAgency = adao.update(currentAgency,  newAgency);
+            System.out.println(newAgency.toString());
+        }else{
+            System.out.println("id de l'agence non valide");
+        }
 
-        Agence newAgency = new Agence(1, codeAgency, adAgence);
-        newAgency = adao.update(currentAgency,  newAgency);
-        System.out.println(newAgency.toString());
     }
     public static void DeleteAgency(){
         AgenceDAO adao = new AgenceDAO();
@@ -231,19 +241,22 @@ public class App {
 
         // Recherche de l'agence à supprimer
         Agence currentAgency = adao.findById(IdChoice);
+        if (currentAgency != null){
+            System.out.println("Etes-vous sûr de vouloir supprimer l'agence "+ currentAgency.toString() +" ?");
+            System.out.println("1 - Oui");
+            System.out.println("2- Non");
+            System.out.print("Entrez votre choix : ");
+            int choice = sc.nextInt();
 
-        System.out.println("Etes-vous sûr de vouloir supprimer l'agence "+ currentAgency.toString() +" ?");
-        System.out.println("1 - Oui");
-        System.out.println("2- Non");
-        System.out.print("Entrez votre choix : ");
-        int choice = sc.nextInt();
-
-        switch (choice){
-            case 1:
-                adao.delete(IdChoice);
-                break;
-            case 2:
-                break;
+            switch (choice){
+                case 1:
+                    adao.delete(IdChoice);
+                    break;
+                case 2:
+                    break;
+            }
+        }else{
+            System.out.println("id de l'agence non valide");
         }
     }
 
@@ -285,13 +298,27 @@ public class App {
 
         if (accountChoice == 1){
             CoSimple currentAccount = csdao.findById(idAccount);
-            System.out.println(currentAccount.toString());
+            if(currentAccount != null){
+                System.out.println(currentAccount.toString());
+            }else {
+                System.out.println("id de compte non valide");
+            }
         } else if(accountChoice == 2){
             CoEpargne currentAccount = cedao.findById(idAccount);
-            System.out.println(currentAccount.toString());
-        } else {
+            if(currentAccount != null){
+                System.out.println(currentAccount.toString());
+            }else {
+                System.out.println("id de compte non valide");
+            }
+        } else if(accountChoice == 3){
             CoPayant currentAccount = cpdao.findById(idAccount);
-            System.out.println(currentAccount.toString());
+            if(currentAccount != null){
+                System.out.println(currentAccount.toString());
+            }else {
+                System.out.println("id de compte non valide");
+            }
+        } else {
+            System.out.println("Type de compte non valide");
         }
     }
 
@@ -314,7 +341,6 @@ public class App {
 
         System.out.println("Entrez l'id de l'agence");
         int idAgence = sc.nextInt();
-
         // Création du compte simple
         CoSimple cs = new CoSimple(1, balance, idAgence ,overdraft);
         cs = csdao.create(cs);
@@ -403,22 +429,26 @@ public class App {
             case 1:
                 System.out.println("Entrez le montant à verser");
                 double amountDeposit = sc2.nextDouble();
-                tmpAccount.versement(amountDeposit);
-                currentAccount = csdao.update(currentAccount, tmpAccount);
+                if(tmpAccount.versement(amountDeposit)){
+                    currentAccount = csdao.update(currentAccount, tmpAccount);
+                }
                 System.out.println(currentAccount.toString());
                 break;
             case 2:
                 System.out.println("Entrez le montant à retirer");
                 double amountWithdrawal = sc2.nextDouble();
-                tmpAccount.retrait(amountWithdrawal);
-                currentAccount = csdao.update(currentAccount, tmpAccount);
+                if(tmpAccount.retrait(amountWithdrawal)){
+                    currentAccount = csdao.update(currentAccount, tmpAccount);
+                }
                 System.out.println(currentAccount.toString());
                 break;
             case 3 :
                 System.out.println("Entrez le montant du découvert");
                 Double overdraft = sc2.nextDouble();
-                CoSimple tmpAccount2 = new CoSimple(currentAccount.getIdCompte(), currentAccount.getSolde(), currentAccount.getIdAgence(), overdraft);
-                currentAccount = csdao.update(currentAccount, tmpAccount2);
+                if(overdraft >= 0){
+                    CoSimple tmpAccount2 = new CoSimple(currentAccount.getIdCompte(), currentAccount.getSolde(), currentAccount.getIdAgence(), overdraft);
+                    currentAccount = csdao.update(currentAccount, tmpAccount2);
+                }
                 System.out.println(currentAccount.toString());
                 break;
             case 4:
@@ -459,7 +489,8 @@ public class App {
         System.out.println("1 - Versement");
         System.out.println("2 - Retrait");
         System.out.println("3 - Modifier le taux d'intérêt");
-        System.out.println("4 - Changer d'agence");
+        System.out.println("4 - Appliquer le taux d'intérêt");
+        System.out.println("5 - Changer d'agence");
         System.out.println("Entrez votre choix");
         int transactionChoice = sc.nextInt();
 
@@ -469,25 +500,36 @@ public class App {
             case 1:
                 System.out.println("Entrez le montant à verser");
                 double amountDeposit = sc2.nextDouble();
-                tmpAccount.versement(amountDeposit);
-                currentAccount = cedao.update(currentAccount, tmpAccount);
+                if(tmpAccount.versement(amountDeposit)){
+                    currentAccount = cedao.update(currentAccount, tmpAccount);
+                }
                 System.out.println(currentAccount.toString());
                 break;
             case 2:
                 System.out.println("Entrez le montant à retirer");
                 double amountWithdrawal = sc2.nextDouble();
-                tmpAccount.retrait(amountWithdrawal);
-                currentAccount = cedao.update(currentAccount, tmpAccount);
+                if(tmpAccount.retrait(amountWithdrawal)){
+                    currentAccount = cedao.update(currentAccount, tmpAccount);
+                }
                 System.out.println(currentAccount.toString());
                 break;
             case 3 :
                 System.out.println("Entrez le taux d'intérêt");
                 float interestRate = sc2.nextFloat();
-                CoEpargne tmpAccount2 = new CoEpargne(currentAccount.getIdCompte(), currentAccount.getSolde(), currentAccount.getIdAgence(), interestRate);
-                currentAccount = cedao.update(currentAccount, tmpAccount2);
+                if(interestRate >= 0){
+                    CoEpargne tmpAccount2 = new CoEpargne(currentAccount.getIdCompte(), currentAccount.getSolde(), currentAccount.getIdAgence(), interestRate);
+                    currentAccount = cedao.update(currentAccount, tmpAccount2);
+                }
                 System.out.println(currentAccount.toString());
                 break;
             case 4:
+                System.out.println("Application du taux d'intérêt du compte");
+                tmpAccount.calculTauxInteret();
+                currentAccount = cedao.update(currentAccount, tmpAccount);
+                System.out.println("Taux d'intérêt appliqué");
+                System.out.println(currentAccount.toString());
+                break;
+            case 5:
                 System.out.println("Liste des agences existantes");
                 String listAgencies = adao.findAll().toString();
                 System.out.println(listAgencies);
@@ -534,15 +576,17 @@ public class App {
             case 1:
                 System.out.println("Entrez le montant à verser");
                 double amountDeposit = sc2.nextDouble();
-                tmpAccount.versement(amountDeposit);
-                currentAccount = cpdao.update(currentAccount, tmpAccount);
+                if(tmpAccount.versement(amountDeposit)){
+                    currentAccount = cpdao.update(currentAccount, tmpAccount);
+                }
                 System.out.println(currentAccount.toString());
                 break;
             case 2:
                 System.out.println("Entrez le montant à retirer");
                 double amountWithdrawal = sc2.nextDouble();
-                tmpAccount.retrait(amountWithdrawal);
-                currentAccount = cpdao.update(currentAccount, tmpAccount);
+                if(tmpAccount.retrait(amountWithdrawal)){
+                    currentAccount = cpdao.update(currentAccount, tmpAccount);
+                }
                 System.out.println(currentAccount.toString());
                 break;
             case 3:
@@ -649,5 +693,21 @@ public class App {
             case 2:
                 break;
         }
+    }
+
+    private static void exportAccountOperations() {
+        OperationDAO odao = new OperationDAO();
+        Scanner sc = new Scanner(System.in);
+
+        System.out.println("Liste des comptes existants");
+        getListAccounts();
+        System.out.println("De quel compte souhaitez-vous exporter les opérations");
+        int IdChoice = sc.nextInt();
+        if(odao.listerOperations(IdChoice)){
+            System.out.println("Export des opéraions réussis");
+        }else {
+            System.out.println("Impossible d'exporter les opérations de ce compte");
+        }
+
     }
 }

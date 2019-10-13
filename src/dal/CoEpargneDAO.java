@@ -10,7 +10,6 @@ import java.util.Date;
 public class CoEpargneDAO implements ICompteDAO<Integer, CoEpargne> {
     private static final String INSERT_CoEpargne_QUERY = "INSERT INTO compte (solde, tauxInteret, type, idAgence) VALUES (?, ?, ?, ?)";
     private static final String UPDATE_CoEpargne_QUERY = "UPDATE compte SET solde = ?, tauxInteret = ?, idAgence = ? WHERE compte.idCompte = ?";
-    private static final String SELECT_ALL_CoEpargne_QUERY = "SELECT * FROM compte WHERE type = 'E'";
 
     @Override
     public CoEpargne create(CoEpargne object) {
@@ -93,9 +92,10 @@ public class CoEpargneDAO implements ICompteDAO<Integer, CoEpargne> {
     @Override
     public ArrayList findAll() {
         try(Connection connection = PersistenceManager.getConnection();
-            Statement st = connection.createStatement();
-            ResultSet rs = st.executeQuery(SELECT_ALL_CoEpargne_QUERY))
+            PreparedStatement ps = connection.prepareStatement(SELECT_ALL_QUERY))
         {
+            ps.setString(1, "E");
+            ResultSet rs = ps.executeQuery();
             ArrayList<CoEpargne> CompteEpargne = new ArrayList<>();
             while (rs.next()){
                 CompteEpargne.add(new CoEpargne(rs.getInt("idCompte"), rs.getDouble("solde"), rs.getInt("idAgence"),  rs.getFloat("tauxInteret")));
@@ -128,10 +128,15 @@ public class CoEpargneDAO implements ICompteDAO<Integer, CoEpargne> {
     @Override
     public void delete(Integer integer) {
         try(Connection connection = PersistenceManager.getConnection();
-            PreparedStatement ps = connection.prepareStatement(DELETE_By_Id_QUERY))
+            PreparedStatement ps = connection.prepareStatement(DELETE_By_Id_QUERY);
+            PreparedStatement ps2 = connection.prepareStatement(DELETE_ALL_OPERATION_QUERY))
         {
             ps.setInt(1, integer);
-            ResultSet rs = ps.executeQuery();
+            ps2.setInt(1, integer);
+
+            //Ont supprime toutes les opérations avant de supprimer le compte
+            ps2.executeQuery();
+            ps.executeQuery();
         } catch (SQLException | IOException e) {
             e.printStackTrace();
         }
