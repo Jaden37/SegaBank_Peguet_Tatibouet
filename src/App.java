@@ -203,6 +203,7 @@ public class App {
             switch (choice){
                 case 1:
                     adao.delete(IdChoice);
+                    System.out.println("Removing successful");
                     break;
                 case 2:
                     break;
@@ -581,6 +582,7 @@ public class App {
         switch (choice){
             case 1:
                 csdao.delete(IdChoice);
+                System.out.println("Removing successful");
                 break;
             case 2:
                 break;
@@ -611,6 +613,7 @@ public class App {
         switch (choice){
             case 1:
                 cedao.delete(IdChoice);
+                System.out.println("Removing successful");
                 break;
             case 2:
                 break;
@@ -641,6 +644,7 @@ public class App {
         switch (choice){
             case 1:
                 cpdao.delete(IdChoice);
+                System.out.println("Removing successful");
                 break;
             case 2:
                 break;
